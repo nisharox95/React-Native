@@ -1,10 +1,12 @@
 import React from 'react';
 import {Card} from 'react-native-elements';
 import {View, Text} from 'react-native';
+import * as Animatable from 'react-native-animatable';
 
 function Contact(props) {
 
   return(
+    <Animatable.View animation="fadeInDown" duration={2000} delay={1000}>                
     <Card
     title = "Contact Us" >
     <Text style={{margin:10}}>121, Clear Water Bay Road</Text>
@@ -14,6 +16,7 @@ function Contact(props) {
     <Text style={{margin:10}}>Fax: +852 8765 4321</Text>
     <Text style={{margin:10}}>Email:confusion@food.net</Text>
     </Card>
+    </Animatable.View>
   )
 }
 

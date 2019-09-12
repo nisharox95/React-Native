@@ -31,14 +31,23 @@ function RenderDish(props) {
         return false;
 }
 
+const recognizeComment = ({ moveX, moveY, dx, dy }) => {
+  if ( dx > 200 )
+      return true;
+  else
+      return false;
+}
+
 const panResponder = PanResponder.create({
     onStartShouldSetPanResponder: (e, gestureState) => {
         return true;
     },
+
     onPanResponderGrant: () => {
       this.view.rubberBand(1000)
       .then(endState => console.log(endState.finished? 'finished' : 'cancelled'));
     },
+
     onPanResponderEnd: (e, gestureState) => {
         console.log("pan responder end", gestureState);
         if (recognizeDrag(gestureState))
@@ -51,11 +60,13 @@ const panResponder = PanResponder.create({
                 ],
                 { cancelable: false }
             );
-
+        else if (recognizeComment(gestureState))
+        {
+            props.onComment();
+        }
         return true;
     }
-})
-
+});
 
   if (dish!= null) {
     return(
@@ -126,7 +137,7 @@ class DishDetail extends Component {
     super(props);
 
     this.state = {
-        rating: null,
+        rating: 5,
         author: '',
         comment:'',
         date:'',
@@ -145,9 +156,8 @@ class DishDetail extends Component {
     this.setState({ showModal: !this.state.showModal});
 }
 
-  handleComment() {
+  handleComment(dishId) {
     const { rating, author, comment } = this.state;
-    const dishId = this.props.navigation.getParam("dishId", "");
     this.props.postComment(dishId, rating, author, comment);
     this.toggleModal();
     this.resetForm();
@@ -155,7 +165,7 @@ class DishDetail extends Component {
 
 resetForm(){
     this.setState({
-        rating: 0,
+        rating: 5,
         author: '',
         comment: '',
         date: '',
@@ -214,7 +224,7 @@ resetForm(){
                         />
                          <Button
                           onPress = {() => {
-                            this.handleComment();
+                            this.handleComment(dishId);
                             this.resetForm();
                           }}
                           color='#6688FF'

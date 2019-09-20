@@ -5,6 +5,7 @@ import DatePicker from 'react-native-datepicker';
 import * as Animatable from 'react-native-animatable';
 import { Notifications } from 'expo';
 import * as Permissions from 'expo-permissions';
+import * as Calendar from 'expo-calendar'
 
 class Reservation extends Component {
 
@@ -43,6 +44,7 @@ class Reservation extends Component {
             text: 'OK',
             onPress: () => { 
             this.presentLocalNotification(this.state.date);
+            this.addReservationToCalendar(this.state.date);
             this.resetForm()
          }
         }
@@ -68,6 +70,30 @@ class Reservation extends Component {
             }
         }
         return permission;
+    }
+
+    async obtainCalendarPermission() {
+        let permission = await Permissions.getAsync(Permissions.CALENDAR);
+        if (permission.status !== 'granted') {
+            permission = await Permissions.askAsync(Permissions.CALENDAR);
+            if (permission.status !== 'granted') {
+                Alert.alert('Permission not granted for Calendar');
+            }
+        }
+        return permission;
+    }
+
+    async addReservationToCalendar(date) {
+        await this.obtainCalendarPermission();
+        const startDate = new Date(Date.parse(date));
+        const endDate = new Date(Date.parse(date)+7200000);
+        Calendar.createEventAsync(Expo.Calendar.DEFAULT, {
+            title: 'Con Fusion',
+            startDate: startDate,
+            endDate: endDate,
+            timeZone:'GMT+8',
+            location:'121, Clear Water Bay Road, Clear Water Bay, Kowloon, Hong Kong'
+        })
     }
 
     async presentLocalNotification(date) {

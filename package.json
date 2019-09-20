@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "expo": "^34.0.1",
+    "expo-calendar": "^6.0.0",
     "expo-image-picker": "^6.0.0",
     "expo-mail-composer": "^6.0.0",
     "expo-secure-store": "^6.0.0",
